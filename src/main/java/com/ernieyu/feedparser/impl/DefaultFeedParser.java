@@ -34,7 +34,11 @@ public class DefaultFeedParser implements FeedParser {
         	
             // Parse feed and return data.
         	parser.parse(inStream, handler);
-        	return handler.getFeed();
+        	Feed feed = handler.getFeed();
+            if (feed == null)
+                throw new FeedException("Invalid RSS/Atom feed");
+            
+            return feed;
         
         } catch (Exception ex) {
         	throw new FeedException(ex);
