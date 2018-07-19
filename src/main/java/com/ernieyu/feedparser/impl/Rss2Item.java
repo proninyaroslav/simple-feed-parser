@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.ernieyu.feedparser.Enclosure;
 import org.xml.sax.Attributes;
 
 import com.ernieyu.feedparser.Element;
@@ -22,6 +23,7 @@ class Rss2Item extends BaseItem {
     private static final String AUTHOR = "author";
     private static final String GUID = "guid";
     private static final String CATEGORY = "category";
+    private static final String ENCLOSURE = "enclosure";
     
     /**
      * Constructs an Rss2Item with the specified namespace uri, name and
@@ -83,5 +85,23 @@ class Rss2Item extends BaseItem {
         }
         
         return categories;
+    }
+
+    @Override
+    public Enclosure getEnclosure()
+    {
+        Element enclosure = getElement(ENCLOSURE);
+        if (enclosure == null)
+            return null;
+
+        Attributes attr = enclosure.getAttributes();
+        String url = attr.getValue("url");
+        String type = attr.getValue("type");
+        String lengthStr = attr.getValue("length");
+        long length = 0;
+        if (lengthStr != null)
+            length = Long.parseLong(lengthStr);
+
+        return new Enclosure(url, type, length);
     }
 }

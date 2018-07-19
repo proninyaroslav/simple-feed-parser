@@ -47,6 +47,12 @@ public interface Item extends Element {
      * Convenience method to retrieve a list of categories.
      */
     public List<String> getCategories();
+
+
+    /**
+     * Returns enclosure
+     */
+    public Enclosure getEnclosure();
     
     /**
      * Indicates whether the specified object is equal to this Item based on

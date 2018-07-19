@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.ernieyu.feedparser.Enclosure;
 import org.xml.sax.Attributes;
 
 import com.ernieyu.feedparser.Element;
@@ -90,5 +91,27 @@ class AtomItem extends BaseItem {
         }
         
         return categories;
+    }
+
+    @Override
+    public Enclosure getEnclosure()
+    {
+        Element link = getElement(LINK);
+        if (link == null)
+            return null;
+
+        Attributes attr = link.getAttributes();
+        String rel = attr.getValue("rel");
+        if (rel == null || !rel.equalsIgnoreCase("enclosure"))
+            return null;
+
+        String url = attr.getValue("href");
+        String type = attr.getValue("type");
+        String lengthStr = attr.getValue("length");
+        long length = 0;
+        if (lengthStr != null)
+            length = Long.parseLong(lengthStr);
+
+        return new Enclosure(url, type, length);
     }
 }
