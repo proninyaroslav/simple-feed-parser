@@ -11,14 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import com.ernieyu.feedparser.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.ernieyu.feedparser.Element;
-import com.ernieyu.feedparser.Feed;
-import com.ernieyu.feedparser.FeedType;
-import com.ernieyu.feedparser.Item;
 
 /**
  * Test case for DefaultFeedParser.
@@ -156,6 +152,33 @@ public class DefaultFeedParserTest {
         
         expectedDate = createDate(2003, 5, 3, 9, 39, 21, "GMT");
         assertEquals("item pub date", expectedDate, item.getPubDate());
+    }
+
+    /** Tests parse method on RSS 2.0 feed with special symbols (&, <, >, ", '). */
+    @Test
+    public void testParseBadRss2() {
+        Feed feed = null;
+
+        try {
+            // Open input stream for test feed.
+            URL url = getClass().getResource("sample-bad-rss-2.xml");
+            InputStream inStream = url.openConnection().getInputStream();
+
+            // Parse feed.
+            feed = feedParser.parse(inStream);
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+
+        // Verify feed.
+        assertNotNull("feed", feed);
+        assertEquals("feed type", FeedType.RSS_2_0, feed.getType());
+
+        // Verify item.
+        List<Item> itemList = feed.getItemList();
+        Item item = itemList.get(0);
+        assertEquals("item title", "Bad string &", item.getTitle());
     }
     
     /**

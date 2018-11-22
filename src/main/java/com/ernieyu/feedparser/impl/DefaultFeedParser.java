@@ -5,6 +5,7 @@ import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import com.ernieyu.feedparser.XMLInputStream;
 import org.xml.sax.XMLReader;
 
 import com.ernieyu.feedparser.Feed;
@@ -33,7 +34,7 @@ public class DefaultFeedParser implements FeedParser {
         	FeedHandler handler = new FeedHandler();
         	
             // Parse feed and return data.
-        	parser.parse(inStream, handler);
+        	parser.parse(new XMLInputStream(inStream), handler);
         	Feed feed = handler.getFeed();
             if (feed == null)
                 throw new FeedException("Invalid RSS/Atom feed");
