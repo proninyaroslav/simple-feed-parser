@@ -154,7 +154,7 @@ public class DefaultFeedParserTest {
         assertEquals("item pub date", expectedDate, item.getPubDate());
     }
 
-    /** Tests parse method on RSS 2.0 feed with special symbols (&, <, >, ", '). */
+    /** Tests parse method on RSS 2.0 feed with special symbols (&, etc). */
     @Test
     public void testParseBadRss2() {
         Feed feed = null;
