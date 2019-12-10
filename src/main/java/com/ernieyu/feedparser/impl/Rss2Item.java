@@ -116,4 +116,9 @@ class Rss2Item extends BaseItem {
     public MediaRss getMediaRss() {
        return new MediaRssParser(this).parse();
     }
+
+    @Override
+    public EzRssTorrentItem getEzRssTorrentItem() {
+        return new EzRss01Parser(this).parse();
+    }
 }

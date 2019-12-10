@@ -22,6 +22,7 @@ public class DefaultFeedParserTest {
     private ArrayList<Content> expectedContentList1;
     private ArrayList<Hash> expectedHashList1;
     private ArrayList<PeerLink> expectedPeerLinks1;
+    private ArrayList<EzRssTorrentItem> expectedEzRssTorrents1;
 
     @Before
     public void setUp() throws Exception {
@@ -75,6 +76,32 @@ public class DefaultFeedParserTest {
         expectedPeerLinks1 = new ArrayList<PeerLink>();
         expectedPeerLinks1.add(new PeerLink("http://www.example.org/sampleFile1.torrent", "application/x-bittorrent"));
         expectedPeerLinks1.add(new PeerLink("http://www.example.org/sampleFile2.torrent", "application/x-bittorrent"));
+
+        expectedEzRssTorrents1 = new ArrayList<EzRssTorrentItem>();
+        expectedEzRssTorrents1.add(new EzRssTorrentItem(
+            "Have.I.Got.News.For.You.S58E08.EXTENDED.480p.x264-mSD[eztv].mkv",
+            "magnet:?xt=urn:btih:DCB57C439FC0DDFB9CB75913D4681B7D176B0B26&dn=Have.I.Got.News.For.You.S58E08.EXTENDED.480p.x264-mSD%5Beztv%5D.mkv&tr=udp%3A%2F%2Ftracker.publicbt.com%2Fannounce&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969",
+            "DCB57C439FC0DDFB9CB75913D4681B7D176B0B26",
+            178291324,
+            5,
+            10,
+            false));
+        expectedEzRssTorrents1.add(new EzRssTorrentItem(
+            "Chris.Tarrant.Extreme.Railways.S06E03.The.Eastern.Express.480p.x264-mSD[eztv].mkv",
+            "magnet:?xt=urn:btih:8BCCD8D64C55A4BF35DB302F16EF8B531DEC8092&dn=Chris.Tarrant.Extreme.Railways.S06E03.The.Eastern.Express.480p.x264-mSD%5Beztv%5D.mkv&tr=udp%3A%2F%2Ftracker.publicbt.com%2Fannounce&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969",
+            "8BCCD8D64C55A4BF35DB302F16EF8B531DEC8092",
+            237305521,
+            0,
+            3,
+            true));
+        expectedEzRssTorrents1.add(new EzRssTorrentItem(
+            "Escape.To.The.Chateau.DIY.S01E06.HDTV.x264-LiNKLE[eztv].mkv",
+            "magnet:?xt=urn:btih:890490271E5FAD449A2C0C175A8CCECA586C53C1&dn=Escape.To.The.Chateau.DIY.S01E06.HDTV.x264-LiNKLE%5Beztv%5D.mkv&tr=udp%3A%2F%2Ftracker.publicbt.com%2Fannounce&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969",
+            "890490271E5FAD449A2C0C175A8CCECA586C53C1",
+            338804654,
+            0,
+            0,
+            false));
     }
 
     @After
@@ -262,7 +289,7 @@ public class DefaultFeedParserTest {
             assertFalse(contentList.isEmpty());
 
             for (Content content : contentList) {
-                assertTrue(expectedContentList1.contains(content));
+                assertTrue(content.toString(), expectedContentList1.contains(content));
             }
         }
     }
@@ -295,7 +322,7 @@ public class DefaultFeedParserTest {
 
         for (Item item : itemsList) {
             Hash hash = item.getMediaRss().getHash();
-            assertTrue(expectedHashList1.contains(hash));
+            assertTrue(hash.toString(), expectedHashList1.contains(hash));
         }
     }
 
@@ -337,7 +364,39 @@ public class DefaultFeedParserTest {
         List<PeerLink> peerLinks = torrentItem.getMediaRss().getPeerLinks();
         assertFalse(peerLinks.isEmpty());
         for (PeerLink peerLink : peerLinks) {
-            assertTrue(expectedPeerLinks1.contains(peerLink));
+            assertTrue(peerLink.toString(), expectedPeerLinks1.contains(peerLink));
+        }
+    }
+
+    /** Tests EzRSS torrent items parsing */
+    @Test
+    public void testParseEzRssTorrentItems()
+    {
+        Feed feed = null;
+
+        try {
+            // Open input stream for test feed.
+            URL url = getClass().getResource("sample-ezrss.xml");
+            InputStream inStream = url.openConnection().getInputStream();
+
+            // Parse feed.
+            feed = feedParser.parse(inStream);
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+
+        // Verify feed.
+        assertNotNull("feed", feed);
+        assertEquals("feed type", FeedType.RSS_2_0, feed.getType());
+
+        // Verify EzRSS content items
+        List<Item> itemsList = feed.getItemList();
+        assertFalse(itemsList.isEmpty());
+
+        for (Item item : itemsList) {
+            EzRssTorrentItem torrentItem = item.getEzRssTorrentItem();
+            assertTrue(torrentItem.toString(), expectedEzRssTorrents1.contains(torrentItem));
         }
     }
     

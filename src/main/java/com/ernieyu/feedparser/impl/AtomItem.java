@@ -127,4 +127,13 @@ class AtomItem extends BaseItem {
     public MediaRss getMediaRss() {
         return null;
     }
+
+    /**
+     * Not supported
+     */
+
+    @Override
+    public EzRssTorrentItem getEzRssTorrentItem() {
+        return null;
+    }
 }

@@ -12,6 +12,8 @@ Goals
 
 - small resource footprint without external library dependencies
 
+- support for Media RSS and EzRSS feeds
+
 Build
 -----
 Building the project jar file requires JDK 1.6.0 and Ant 1.7.0 or later.

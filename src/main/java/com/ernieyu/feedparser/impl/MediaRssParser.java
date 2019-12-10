@@ -10,6 +10,10 @@ import org.xml.sax.Attributes;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A parser for Media RSS namespace (http://search.yahoo.com/mrss)
+ */
+
 class MediaRssParser {
     private static final String MEDIA_RSS_NAMESPACE_URI = "http://search.yahoo.com/mrss";
     private static final String MEDIA_RSS_CONTENT = "content";
@@ -53,7 +57,7 @@ class MediaRssParser {
 
     public Hash parseHash() {
         Element mediaElement = item.getElement(MEDIA_RSS_HASH);
-        if (mediaElement != null && !isMediaRssElement(mediaElement))
+        if (mediaElement == null || !isMediaRssElement(mediaElement))
             return null;
 
         Attributes attr = mediaElement.getAttributes();

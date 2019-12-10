@@ -60,6 +60,11 @@ public interface Item extends Element {
      * Returns the MediaRSS elements of this item, if supported, or null otherwise
      */
     public MediaRss getMediaRss();
+
+    /**
+     * Returns the EzRSS element of this item, if supported, or null otherwise
+     */
+    public EzRssTorrentItem getEzRssTorrentItem();
     
     /**
      * Indicates whether the specified object is equal to this Item based on

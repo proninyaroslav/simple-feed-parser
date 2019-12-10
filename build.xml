@@ -139,7 +139,7 @@
                 includes="**/*.jar" />
             <fileset file="build.xml" />
             <fileset file="LICENSE.txt" />
-            <fileset file="README.txt" />
+            <fileset file="README.md" />
             <fileset file=".classpath" />
             <fileset file=".project" />
         </zip>
