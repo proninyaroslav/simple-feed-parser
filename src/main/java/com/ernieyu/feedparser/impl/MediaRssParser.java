@@ -41,7 +41,7 @@ class MediaRssParser {
 
     public Hash parseHash() {
         Element mediaElement = item.getElement(MEDIA_RSS_HASH);
-        if (!isMediaRssElement(mediaElement))
+        if (mediaElement != null && !isMediaRssElement(mediaElement))
             return null;
 
         Attributes attr = mediaElement.getAttributes();
