@@ -43,9 +43,14 @@ class AtomItem extends BaseItem {
     }
 
     @Override
-    public String getLink() {
-        Element link = getElement(LINK);
-        return (link != null) ? link.getAttributes().getValue("href") : null;
+    public List<String> getLinks() {
+        ArrayList<String> links = new ArrayList<String>();
+        List<Element> elements = getElementList(LINK);
+        for (Element element : elements) {
+            links.add(element.getAttributes().getValue("href"));
+        }
+
+        return links;
     }
 
     @Override

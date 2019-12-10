@@ -21,9 +21,9 @@ public interface Item extends Element {
     public String getTitle();
 
     /**
-     * Convenience method to retrieve the link.
+     * Convenience method to retrieve the list of links.
      */
-    public String getLink();
+    public List<String> getLinks();
 
     /**
      * Convenience method to retrieve the description.

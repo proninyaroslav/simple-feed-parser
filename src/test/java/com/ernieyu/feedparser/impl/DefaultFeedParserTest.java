@@ -119,7 +119,7 @@ public class DefaultFeedParserTest {
 
         Item item = itemList.get(0);
         assertEquals("item title", "Atom-Powered Robots Run Amok", item.getTitle());
-        assertEquals("item link", "http://example.org/2003/12/13/atom03", item.getLink());
+        assertEquals("item link", "http://example.org/2003/12/13/atom03", item.getLinks().get(0));
         assertEquals("item description", "Some text.", item.getDescription());
         assertEquals("item id", "urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a", item.getGuid());
         
@@ -158,7 +158,7 @@ public class DefaultFeedParserTest {
 
         Item item = itemList.get(0);
         assertEquals("item title", "Processing Inclusions with XSLT", item.getTitle());
-        assertEquals("item link", "http://xml.com/pub/2000/08/09/xslt/xslt.html", item.getLink());
+        assertEquals("item link", "http://xml.com/pub/2000/08/09/xslt/xslt.html", item.getLinks().get(0));
     }
 
     /** Tests parse method on RSS 2.0 feed. */
@@ -197,7 +197,7 @@ public class DefaultFeedParserTest {
 
         Item item = itemList.get(0);
         assertEquals("item title", "Star City", item.getTitle());
-        assertEquals("item link", "http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp", item.getLink());
+        assertEquals("item link", "http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp", item.getLinks().get(0));
         assertEquals("item guid", "http://liftoff.msfc.nasa.gov/2003/06/03.html#item573", item.getGuid());
         
         expectedDate = createDate(2003, 5, 3, 9, 39, 21, "GMT");

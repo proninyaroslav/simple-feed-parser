@@ -42,9 +42,14 @@ class Rss1Item extends BaseItem {
     }
 
     @Override
-    public String getLink() {
-        Element link = getElement(LINK);
-        return (link != null) ? link.getContent() : null;
+    public List<String> getLinks() {
+        ArrayList<String> links = new ArrayList<String>();
+        List<Element> elements = getElementList(LINK);
+        for (Element element : elements) {
+            links.add(element.getContent());
+        }
+
+        return links;
     }
 
     @Override
