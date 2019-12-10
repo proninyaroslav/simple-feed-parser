@@ -3,6 +3,7 @@ package com.ernieyu.feedparser.impl;
 import com.ernieyu.feedparser.Element;
 import com.ernieyu.feedparser.mediarss.Content;
 import com.ernieyu.feedparser.mediarss.Hash;
+import com.ernieyu.feedparser.mediarss.MediaRss;
 import com.ernieyu.feedparser.mediarss.PeerLink;
 import org.xml.sax.Attributes;
 
@@ -19,6 +20,17 @@ class MediaRssParser {
 
     public MediaRssParser(Rss2Item item) {
         this.item = item;
+    }
+
+    public MediaRss parse()
+    {
+        MediaRssParser parser = new MediaRssParser(item);
+
+        List<Content> content = parser.parseContent();
+        Hash hash = parser.parseHash();
+        List<PeerLink> peerLinks = parser.parsePeerLinks();
+
+        return new MediaRss(content, hash, peerLinks);
     }
 
     public List<Content> parseContent() {

@@ -114,12 +114,6 @@ class Rss2Item extends BaseItem {
 
     @Override
     public MediaRss getMediaRss() {
-        MediaRssParser parser = new MediaRssParser(this);
-
-        List<Content> content = parser.parseContent();
-        Hash hash = parser.parseHash();
-        List<PeerLink> peerLinks = parser.parsePeerLinks();
-
-        return new MediaRss(content, hash, peerLinks);
+       return new MediaRssParser(this).parse();
     }
 }
