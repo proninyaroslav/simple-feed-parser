@@ -1,30 +1,80 @@
 package com.ernieyu.feedparser.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 import com.ernieyu.feedparser.*;
+import com.ernieyu.feedparser.mediarss.Content;
+import com.ernieyu.feedparser.mediarss.Hash;
+import com.ernieyu.feedparser.mediarss.PeerLink;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test case for DefaultFeedParser.
  */
 public class DefaultFeedParserTest {
     private DefaultFeedParser feedParser;
+    private ArrayList<Content> expectedContentList1;
+    private ArrayList<Hash> expectedHashList1;
+    private ArrayList<PeerLink> expectedPeerLinks1;
 
     @Before
     public void setUp() throws Exception {
         feedParser = new DefaultFeedParser();
+
+        expectedContentList1 = new ArrayList<Content>();
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/22/96349506_6f022998be_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/32/96349115_05201684c2_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/9/86513598_dde1591b5f_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/43/86513448_274c16b705_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/36/86513332_08e0447649_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/38/86513201_ff82c336a1_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/42/86513082_d88d4ef28a_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/9/86512971_18ba7a51b6_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/6/86512857_f57b70e61c_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://static.flickr.com/37/86512732_2f67a4086b_o.jpg", "image/jpeg"));
+        expectedContentList1.add(new Content(
+            "http://example.com/foo.torrent", "application/x-bittorrent"));
+
+        expectedHashList1 = new ArrayList<Hash>();
+        expectedHashList1.add(new Hash("0e136f13a68bfbfd27ffc15414aae57b"));
+        expectedHashList1.add(new Hash("1831699c3711ec7b6a916e615475e51b"));
+        Hash hash = new Hash("da2c1b9ba94f1dc34003f3c71a7b288e5c2406ea");
+        hash.setAlgorithm("sha1");
+        expectedHashList1.add(hash);
+        hash = new Hash("ebaf56fafc8fcd38a01fe2cadf1d8bb607550f9d");
+        hash.setAlgorithm("sha1");
+        expectedHashList1.add(hash);
+        hash = new Hash("ee6bcaf2b96961c8243609e6d7fd9977c52e5c4c");
+        hash.setAlgorithm("sha-1");
+        expectedHashList1.add(hash);
+        expectedHashList1.add(new Hash("44a9409d6ab64ed4720ba0e37491eec6"));
+        expectedHashList1.add(new Hash("e217ac26d8352b62679a239d2d2a9abf"));
+        expectedHashList1.add(new Hash("d715b63f003e106c4ae4403f37176450"));
+        expectedHashList1.add(new Hash("641f66a65438e35a62721302d3af514c"));
+        expectedHashList1.add(new Hash("93b4821fac78a6494497de51131915dc"));
+        hash = new Hash("4a3ce8ee11e091dd7923f4d8c6e5b5e41ec7c047");
+        hash.setAlgorithm("sha1");
+        expectedHashList1.add(hash);
+
+        expectedPeerLinks1 = new ArrayList<PeerLink>();
+        expectedPeerLinks1.add(new PeerLink("http://www.example.org/sampleFile1.torrent", "application/x-bittorrent"));
+        expectedPeerLinks1.add(new PeerLink("http://www.example.org/sampleFile2.torrent", "application/x-bittorrent"));
     }
 
     @After
@@ -179,6 +229,116 @@ public class DefaultFeedParserTest {
         List<Item> itemList = feed.getItemList();
         Item item = itemList.get(0);
         assertEquals("item title", "Bad string &", item.getTitle());
+    }
+
+    /** Tests MediaRSS content parsing */
+    @Test
+    public void testParseMediaRssContent()
+    {
+        Feed feed = null;
+
+        try {
+            // Open input stream for test feed.
+            URL url = getClass().getResource("sample-media-rss.xml");
+            InputStream inStream = url.openConnection().getInputStream();
+
+            // Parse feed.
+            feed = feedParser.parse(inStream);
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+
+        // Verify feed.
+        assertNotNull("feed", feed);
+        assertEquals("feed type", FeedType.RSS_2_0, feed.getType());
+
+        // Verify MediaRSS content items
+        List<Item> itemsList = feed.getItemList();
+        assertFalse(itemsList.isEmpty());
+
+        for (Item item : itemsList) {
+            List<Content> contentList = item.getMediaRss().getContent();
+            assertFalse(contentList.isEmpty());
+
+            for (Content content : contentList) {
+                assertTrue(expectedContentList1.contains(content));
+            }
+        }
+    }
+
+    /** Tests MediaRSS hash parsing */
+    @Test
+    public void testParseMediaRssHash()
+    {
+        Feed feed = null;
+
+        try {
+            // Open input stream for test feed.
+            URL url = getClass().getResource("sample-media-rss.xml");
+            InputStream inStream = url.openConnection().getInputStream();
+
+            // Parse feed.
+            feed = feedParser.parse(inStream);
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+
+        // Verify feed.
+        assertNotNull("feed", feed);
+        assertEquals("feed type", FeedType.RSS_2_0, feed.getType());
+
+        // Verify MediaRSS content items
+        List<Item> itemsList = feed.getItemList();
+        assertFalse(itemsList.isEmpty());
+
+        for (Item item : itemsList) {
+            Hash hash = item.getMediaRss().getHash();
+            assertTrue(expectedHashList1.contains(hash));
+        }
+    }
+
+    /** Tests MediaRSS peerLink parsing */
+    @Test
+    public void testParseMediaRssPeerLinks()
+    {
+        Feed feed = null;
+
+        try {
+            // Open input stream for test feed.
+            URL url = getClass().getResource("sample-media-rss.xml");
+            InputStream inStream = url.openConnection().getInputStream();
+
+            // Parse feed.
+            feed = feedParser.parse(inStream);
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+
+        // Verify feed.
+        assertNotNull("feed", feed);
+        assertEquals("feed type", FeedType.RSS_2_0, feed.getType());
+
+        // Verify MediaRSS content items
+        List<Item> itemsList = feed.getItemList();
+        assertFalse(itemsList.isEmpty());
+
+        Item torrentItem = null;
+        for (Item item : itemsList) {
+            if (item.getTitle().equals("Torrent")) {
+                torrentItem = item;
+                break;
+            }
+        }
+        assertNotNull(torrentItem);
+
+        List<PeerLink> peerLinks = torrentItem.getMediaRss().getPeerLinks();
+        assertFalse(peerLinks.isEmpty());
+        for (PeerLink peerLink : peerLinks) {
+            assertTrue(expectedPeerLinks1.contains(peerLink));
+        }
     }
     
     /**

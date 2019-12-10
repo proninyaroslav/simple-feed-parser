@@ -5,12 +5,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.ernieyu.feedparser.Enclosure;
+import com.ernieyu.feedparser.*;
+import com.ernieyu.feedparser.mediarss.MediaRss;
 import org.xml.sax.Attributes;
-
-import com.ernieyu.feedparser.Element;
-import com.ernieyu.feedparser.FeedType;
-import com.ernieyu.feedparser.FeedUtils;
 
 /**
  * Item implementation for RSS 1.0 feeds.
@@ -83,8 +80,7 @@ class Rss1Item extends BaseItem {
     }
 
     @Override
-    public List<Enclosure> getEnclosures()
-    {
+    public List<Enclosure> getEnclosures() {
         ArrayList<Enclosure> enclosures = new ArrayList<Enclosure>();
         List<Element> enclosuresElem = getElementList(ENCLOSURE);
 
@@ -101,5 +97,14 @@ class Rss1Item extends BaseItem {
         }
 
         return enclosures;
+    }
+
+    /**
+     * Not supported
+     */
+
+    @Override
+    public MediaRss getMediaRss() {
+        return null;
     }
 }

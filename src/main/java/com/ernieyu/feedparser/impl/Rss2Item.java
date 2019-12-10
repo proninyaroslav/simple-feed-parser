@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.ernieyu.feedparser.Enclosure;
+import com.ernieyu.feedparser.*;
+import com.ernieyu.feedparser.mediarss.MediaRss;
+import com.ernieyu.feedparser.mediarss.Content;
+import com.ernieyu.feedparser.mediarss.Hash;
+import com.ernieyu.feedparser.mediarss.PeerLink;
 import org.xml.sax.Attributes;
-
-import com.ernieyu.feedparser.Element;
-import com.ernieyu.feedparser.FeedType;
-import com.ernieyu.feedparser.FeedUtils;
 
 /**
  * Item implementation for RSS 2.0 feeds.
@@ -88,8 +88,7 @@ class Rss2Item extends BaseItem {
     }
 
     @Override
-    public List<Enclosure> getEnclosures()
-    {
+    public List<Enclosure> getEnclosures() {
         ArrayList<Enclosure> enclosures = new ArrayList<Enclosure>();
         List<Element> enclosuresElem = getElementList(ENCLOSURE);
 
@@ -106,5 +105,16 @@ class Rss2Item extends BaseItem {
         }
 
         return enclosures;
+    }
+
+    @Override
+    public MediaRss getMediaRss() {
+        MediaRssParser parser = new MediaRssParser(this);
+
+        List<Content> content = parser.parseContent();
+        Hash hash = parser.parseHash();
+        List<PeerLink> peerLinks = parser.parsePeerLinks();
+
+        return new MediaRss(content, hash, peerLinks);
     }
 }
