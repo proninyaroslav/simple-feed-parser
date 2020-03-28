@@ -44,13 +44,16 @@ class Rss2Feed extends BaseElement implements Feed {
     @Override
 	public String getTitle() {
         Element channel = getElement(CHANNEL);
-	    Element title = channel.getElement(TITLE);
+	    Element title = (channel == null ? null : channel.getElement(TITLE));
 	    return (title != null) ? title.getContent() : null;
 	}
 	
     @Override
 	public String getLink() {
         Element channel = getElement(CHANNEL);
+        if (channel == null) {
+            return null;
+        }
         for (Element element : channel.getElementList(LINK)) {
             if (!element.getContent().isEmpty()) {
                 return element.getContent();
@@ -62,27 +65,30 @@ class Rss2Feed extends BaseElement implements Feed {
     @Override
 	public String getDescription() {
         Element channel = getElement(CHANNEL);
-        Element descr = channel.getElement(DESCRIPTION);
+        Element descr = (channel == null ? null : channel.getElement(DESCRIPTION));
         return (descr != null) ? descr.getContent() : null;
 	}
 
     @Override
     public String getLanguage() {
         Element channel = getElement(CHANNEL);
-        Element language = channel.getElement(LANGUAGE);
+        Element language = (channel == null ? null : channel.getElement(LANGUAGE));
         return (language != null) ? language.getContent() : null;
     }
     
     @Override
     public String getCopyright() {
         Element channel = getElement(CHANNEL);
-        Element copy = channel.getElement(COPYRIGHT);
+        Element copy = (channel == null ? null : channel.getElement(COPYRIGHT));
         return (copy != null) ? copy.getContent() : null;
     }
     
     @Override
     public Date getPubDate() {
         Element channel = getElement(CHANNEL);
+        if (channel == null) {
+            return null;
+        }
         Element pubDate = channel.getElement(PUB_DATE);
         if (pubDate == null) pubDate = channel.getElement(LAST_BUILD_DATE);
         return (pubDate != null) ? FeedUtils.convertRss2Date(pubDate.getContent()) : null;
@@ -105,6 +111,9 @@ class Rss2Feed extends BaseElement implements Feed {
 	public List<Item> getItemList() {
         // Get element list for items.
         Element channel = getElement(CHANNEL);
+        if (channel == null) {
+            return null;
+        }
 	    List<Element> elementList = channel.getElementList(ITEM);
         List<Item> itemList = new ArrayList<Item>();
 

@@ -43,13 +43,16 @@ class Rss1Feed extends BaseElement implements Feed {
     @Override
 	public String getTitle() {
         Element channel = getElement(CHANNEL);
-	    Element title = channel.getElement(TITLE);
+	    Element title = (channel == null ? null : channel.getElement(TITLE));
 	    return (title != null) ? title.getContent() : null;
 	}
 
     @Override
     public String getLink() {
         Element channel = getElement(CHANNEL);
+        if (channel == null) {
+            return null;
+        }
         for (Element element : channel.getElementList(LINK)) {
             if (!element.getContent().isEmpty()) {
                 return element.getContent();
@@ -61,7 +64,7 @@ class Rss1Feed extends BaseElement implements Feed {
     @Override
 	public String getDescription() {
         Element channel = getElement(CHANNEL);
-        Element descr = channel.getElement(DESCRIPTION);
+        Element descr = (channel == null ? null : channel.getElement(DESCRIPTION));
         return (descr != null) ? descr.getContent() : null;
 	}
 
@@ -69,7 +72,7 @@ class Rss1Feed extends BaseElement implements Feed {
     public String getLanguage() {
         // Use Dublin Core element.
         Element channel = getElement(CHANNEL);
-        Element language = channel.getElement(LANGUAGE);
+        Element language = (channel == null ? null : channel.getElement(LANGUAGE));
         return (language != null) ? language.getContent() : null;
     }
     
@@ -77,7 +80,7 @@ class Rss1Feed extends BaseElement implements Feed {
     public String getCopyright() {
         // Use Dublin Core element.
         Element channel = getElement(CHANNEL);
-        Element rights = channel.getElement(RIGHTS);
+        Element rights = (channel == null ? null : channel.getElement(RIGHTS));
         return (rights != null) ? rights.getContent() : null;
     }
     
@@ -85,7 +88,7 @@ class Rss1Feed extends BaseElement implements Feed {
     public Date getPubDate() {
         // Use Dublin Core element.
         Element channel = getElement(CHANNEL);
-        Element pubDate = channel.getElement(DATE);
+        Element pubDate = (channel == null ? null : channel.getElement(DATE));
         return (pubDate != null) ? FeedUtils.convertRss1Date(pubDate.getContent()) : null;
     }
 
